@@ -4,41 +4,45 @@
 
 using namespace std;
 
-int Cnta(string &s) {
+int Cnt3(const string &s) {
+	// возвращает количество подпоследовательностей s из трех одинаковых букв
+	int n = (int)s.size();
 	int ans = 0;
-	for (int i = 0; i < (int)s.size(); ++i) {
-		ans += (s[i] == 'a');
+	for (int i = 0; i < n; ++i) {
+		for (int j = i+1; j < n; ++j) {
+			for (int k = j+1; k < n; ++k) {
+				ans += (s[i] == s[j] && s[j] == s[k]);
+			}
+		}
 	}
-	return ans;
-}
-
-int Len2(string &s) {
-	int ans = (int)s.size() * 2;
 	return ans;
 }
 
 class Cntlet {
 private:
-	function<int(string&)> solve;
+	function<int(const string&)> solve;
 public:
-	Cntlet (function<int(string&)> f) {
+	Cntlet (function<int(const string&)> f) {
 		solve = f;
 	}
 
-	int operator()(string &s) {
-		return solve(s);
+	string operator()(const string &s) {
+		if ((int) s.size() > 600) {
+			return "String size is too large";
+		}
+		return "Answer: " + to_string(solve(s));
 	}
 };
 
 
 int main() {
-	string s;
-	cin >> s;
-
-	Cntlet f1(Cnta);
-	cout << f1(s) << endl;
-
-	Cntlet f2(Len2);
-	cout << f2(s);
+	Cntlet f(Cnt3);
+	string s = "aaabbbccca";
+	cout << f(s) << '\n';
+	string t = "";
+	for (int i = 0; i < 2000; ++i) {
+		t += 't';
+	}
+	cout << f(t);
 	return 0;
 }
